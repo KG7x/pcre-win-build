@@ -31,7 +31,7 @@ jobs:
 
     - name: Build
       run: |
-        if ( ${{ matrix.arch }} == arm64 )
+        if ( ${{ matrix.arch }} == 'arm64' )
         {
           msbuild build-VS2019-arm\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
         }
