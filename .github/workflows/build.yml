@@ -10,11 +10,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        arch: [arm64, x86, x64]
-        arch: [x86, x64]
+        arch: [arm64, x86, x64]
+#        arch: [x86, x64]
         include:
-#          - arch: arm64
-#            platform: ARM64
+          - arch: arm64
+            platform: ARM64
 
           - arch: x86
             platform: Win32
@@ -30,5 +30,10 @@ jobs:
         submodules: recursive
 
     - name: Build
-#      run: |
-      run: msbuild build-VS2019\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
+      run: |
+        if [ ${{ matrix.arch }} == "arm64" ]; then
+          msbuild build-VS2019-arm\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
+        else
+          msbuild build-VS2019\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
+        fi
+#      run: msbuild build-VS2019\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
