@@ -4,18 +4,14 @@ on: [push]
 
 jobs:
 
-  windows-msvc:
+  windows-msvc-x86:
     name: ${{ matrix.config }} Windows ${{ matrix.arch }}
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        arch: [arm64, x86, x64]
-#        arch: [x86, x64]
+        arch: [x86, x64]
         include:
-          - arch: arm64
-            platform: ARM64
-
           - arch: x86
             platform: Win32
 
@@ -30,14 +26,30 @@ jobs:
         submodules: recursive
 
     - name: Build
-      run: |
-        if ( ${{ matrix.arch }} == 'arm64' )
-        {
-          msbuild build-VS2019-arm\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
-        }
-        else
-        {
-          msbuild build-VS2019\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
-        }
-#        fi
-#      run: msbuild build-VS2019\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
+      run: msbuild build-VS2019\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.platform }}
+
+
+  windows-msvc-arm:
+    name: ${{ matrix.config }} Windows ${{ matrix.arch }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+
+        arch: [ARM, ARM64]
+#        include:
+#          - arch: arm
+#            platform: ARM
+
+#          - arch: arm64
+#            platform: ARM64
+
+    steps:
+    - uses: microsoft/setup-msbuild@v1.0.2
+
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Build
+      run: msbuild build-VS2019-arm\pcre.sln /m /p:Configuration=Release,Platform=${{ matrix.arch }}
